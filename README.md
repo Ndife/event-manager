@@ -23,29 +23,29 @@ The following diagram illustrates the logic for the key operations, including th
 
 ```mermaid
 flowchart TD
-    start([Start]) --> request{Request Type}
+    start([Start]) --> request{"Request Type"}
 
-    request -->|Add Category| check_parent[Check Parent Exists]
-    check_parent -- Yes --> create[Create Category linked to Parent]
-    check_parent -- No --> error_parent[Error: Parent Not Found]
+    request -->|Add Category| check_parent["Check Parent Exists"]
+    check_parent -- Yes --> create["Create Category linked to Parent"]
+    check_parent -- No --> error_parent["Error: Parent Not Found"]
     create --> finish([End])
 
-    request -->|Remove Category| find_node[Find Node]
-    find_node -- Found --> delete[Delete Node & Subtree (Cascade)]
-    find_node -- Not Found --> error_404[Error: Not Found]
+    request -->|Remove Category| find_node["Find Node"]
+    find_node -- Found --> delete["Delete Node & Subtree (Cascade)"]
+    find_node -- Not Found --> error_404["Error: Not Found"]
     delete --> finish
 
-    request -->|Fetch Subtree| find_root[Find Root Node]
-    find_root -- Found --> fetch_children[Recursively Fetch Children]
+    request -->|Fetch Subtree| find_root["Find Root Node"]
+    find_root -- Found --> fetch_children["Recursively Fetch Children"]
     find_root -- Not Found --> error_404
-    fetch_children --> return_json[Return JSON Tree]
+    fetch_children --> return_json["Return JSON Tree"]
     return_json --> finish
 
-    request -->|Move Subtree| check_move_validity{Check Validity}
-    check_move_validity -->|Same Parent?| no_op[No Operation]
-    check_move_validity -->|New Parent is Child of Current?| cycle_error[Error: Cycle Detected]
-    check_move_validity -->|Valid| update_parent[Update Parent ID]
-    update_parent --> save[Save Category]
+    request -->|Move Subtree| check_move_validity{"Check Validity"}
+    check_move_validity -->|Same Parent?| no_op["No Operation"]
+    check_move_validity -->|New Parent is Child of Current?| cycle_error["Error: Cycle Detected"]
+    check_move_validity -->|Valid| update_parent["Update Parent ID"]
+    update_parent --> save["Save Category"]
     no_op --> finish
     cycle_error --> finish
     save --> finish
