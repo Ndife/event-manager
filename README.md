@@ -1,5 +1,7 @@
 # Event Manager - Categories API
 
+[**🚀 Live Demo**](https://event-manager-ya4p.onrender.com/swagger-ui/index.html)
+
 This project is a solution for the Baobab Nigeria Recruitment Code Challenge. It implements a REST API to manage event categories in an infinite depth tree structure.
 
 ## Features
