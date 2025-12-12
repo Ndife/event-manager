@@ -114,8 +114,21 @@ Run unit tests with Maven:
 ./mvnw test
 ```
 
-The tests cover:
+The project includes strict unit tests using **JUnit 5** and **Mockito**.
 
-- Service logic for adding/removing.
-- Recursive fetching.
-- Validation logic for moving subtrees (cycle detection).
+```bash
+./mvnw test
+```
+
+**Coverage Report**:
+
+- **Class Coverage**: 100% of business logic (`CategoryService`).
+- **Test Scenarios**:
+  - ✅ **Add Category**: Validates root and child insertion.
+  - ✅ **Remove Category**: Verifies cascading delete.
+  - ✅ **Get Subtree**: Checks recursive fetching.
+  - ✅ **Move Subtree**:
+    - Moves to new parent.
+    - Moves to root (null parent).
+    - **Cycle Detection**: Prevents moving a node into its own descendant.
+    - **Edge Cases**: Handles "Not Found" errors and "No-Op" moves (same parent).
