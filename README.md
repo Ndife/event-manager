@@ -98,6 +98,14 @@ http://localhost:8080/swagger-ui/index.html
 | DELETE | `/categories/{id}`      | Delete a category and its subtree                          |
 | PUT    | `/categories/{id}/move` | Move a subtree to a new parent (query param `newParentId`) |
 
+## Deployment
+
+The application is deployed using the following free-tier services:
+
+- **Application**: Hosted on **Render** (Dockerized Spring Boot app).
+- **Database**: Hosted on **Neon** (Managed PostgreSQL).
+- **Note**: The free tier on Render spins down after inactivity, so the initial request might take roughly 50 seconds to wake up.
+
 ## Testing
 
 Run unit tests with Maven:
