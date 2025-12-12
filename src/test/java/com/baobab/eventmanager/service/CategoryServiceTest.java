@@ -123,4 +123,42 @@ class CategoryServiceTest {
 
         assertThrows(IllegalArgumentException.class, () -> categoryService.moveSubtree(1L, 2L));
     }
+
+    @Test
+    void getCategorySubtree_ShouldThrowException_WhenNotFound() {
+        when(categoryRepository.findById(1L)).thenReturn(Optional.empty());
+
+        assertThrows(IllegalArgumentException.class, () -> categoryService.getCategorySubtree(1L));
+    }
+
+    @Test
+    void moveSubtree_ShouldMoveToRoot_WhenNewParentIsNull() {
+        Category category = new Category("Node");
+        category.setId(1L);
+        category.setParent(new Category("OldParent"));
+
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(category));
+        when(categoryRepository.save(category)).thenReturn(category);
+
+        Category result = categoryService.moveSubtree(1L, null);
+
+        assertNull(result.getParent());
+    }
+
+    @Test
+    void moveSubtree_ShouldDoNothing_WhenNewParentIsSameAsOld() {
+        Category parent = new Category("Parent");
+        parent.setId(2L);
+
+        Category child = new Category("Child");
+        child.setId(1L);
+        child.setParent(parent);
+
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(child));
+
+        Category result = categoryService.moveSubtree(1L, 2L);
+
+        assertEquals(parent, result.getParent());
+        verify(categoryRepository, never()).save(any(Category.class));
+    }
 }
