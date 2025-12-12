@@ -69,14 +69,4 @@ public class Category {
         this.children = children;
     }
 
-    // Utility methods to sync both sides of the relationship
-    public void addChild(Category child) {
-        children.add(child);
-        child.setParent(this);
-    }
-
-    public void removeChild(Category child) {
-        children.remove(child);
-        child.setParent(null);
-    }
 }
