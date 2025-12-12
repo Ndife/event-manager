@@ -46,19 +46,20 @@ public class CategoryService {
         Category nodeToMove = categoryRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Category not found with id: " + id));
 
-        // If explicitly moving to root (newParentId == null)
+        // Moving to root
         if (newParentId == null) {
             nodeToMove.setParent(null);
             return categoryRepository.save(nodeToMove);
         }
-        
-        // Optimisation: If sticking to the same parent, do nothing
+
+        // Optimization: No need to update if parent hasn't changed
         if (nodeToMove.getParent() != null && nodeToMove.getParent().getId().equals(newParentId)) {
             return nodeToMove;
         }
 
         Category newParent = categoryRepository.findById(newParentId)
-                .orElseThrow(() -> new IllegalArgumentException("New parent category not found with id: " + newParentId));
+                .orElseThrow(
+                        () -> new IllegalArgumentException("New parent category not found with id: " + newParentId));
 
         validateMove(nodeToMove, newParent);
 
@@ -67,7 +68,7 @@ public class CategoryService {
     }
 
     private void validateMove(Category nodeToMove, Category newParent) {
-        // Cycle check: Ensure newParent is not a descendant of nodeToMove
+        // Prevent cycles: cannot move a node into its own descendant
         Category current = newParent;
         while (current != null) {
             if (current.getId().equals(nodeToMove.getId())) {

@@ -40,7 +40,7 @@ class CategoryServiceTest {
         Category parent = new Category("Parent");
         parent.setId(1L);
         when(categoryRepository.findById(1L)).thenReturn(Optional.of(parent));
-        
+
         Category child = new Category("Child");
         child.setParent(parent);
         when(categoryRepository.save(any(Category.class))).thenReturn(child);
@@ -90,7 +90,7 @@ class CategoryServiceTest {
     void moveSubtree_ShouldUpdateParent_WhenMoveIsValid() {
         Category child = new Category("Child");
         child.setId(2L);
-        
+
         Category newParent = new Category("NewParent");
         newParent.setId(1L);
 
@@ -111,15 +111,12 @@ class CategoryServiceTest {
 
         Category childB = new Category("B");
         childB.setId(2L);
-        
-        // Structure: A -> B. Move A to under B? 
-        // Logic check: "validateMove: Ensure newParent (B) is not a descendant of nodeToMove (A)"
-        
-        // Let's set up the existing relationship in objects
-        childB.setParent(parentA); // B is currently child of A
 
-        when(categoryRepository.findById(1L)).thenReturn(Optional.of(parentA)); // Node to move
-        when(categoryRepository.findById(2L)).thenReturn(Optional.of(childB));  // New Parent
+        // Verify that moving a node to its own descendant is invalid
+        childB.setParent(parentA);
+
+        when(categoryRepository.findById(1L)).thenReturn(Optional.of(parentA));
+        when(categoryRepository.findById(2L)).thenReturn(Optional.of(childB));
 
         assertThrows(IllegalArgumentException.class, () -> categoryService.moveSubtree(1L, 2L));
     }
